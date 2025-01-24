@@ -31,7 +31,7 @@ public class TestServiceApplication {
         em.setPackagesToScan("org.communication", "com.example.testservice");
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setShowSql(false);
-        hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
+        hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQLDialect");
         em.setJpaVendorAdapter(hibernateJpaVendorAdapter);
         return em;
     }
