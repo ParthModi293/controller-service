@@ -16,11 +16,13 @@ import java.util.Map;
 public class EmailService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final TemplateDetailsRepository templateDetailsRepository;
+    private final org.communication.service.EmailService emailService;
 
-    public EmailService(KafkaTemplate<String, Object> kafkaTemplate, TemplateDetailsRepository templateDetailsRepository) {
+    public EmailService(KafkaTemplate<String, Object> kafkaTemplate, TemplateDetailsRepository templateDetailsRepository, org.communication.service.EmailService emailService) {
 
         this.kafkaTemplate = kafkaTemplate;
         this.templateDetailsRepository = templateDetailsRepository;
+        this.emailService = emailService;
     }
 
 
@@ -28,6 +30,13 @@ public class EmailService {
         EmailDto emailDto = emailDtoMaker(emailBean);
         kafkaTemplate.send("email-topic", emailDto.getPriority(), null, new ObjectMapper().writeValueAsString(emailDto));
         return new ResponseBean<>(HttpStatus.OK, "Mail sender under process", "Mail sender under process", null);
+    }
+
+    public ResponseBean<Void> mailSenderRestApi(EmailBean emailBean) {
+        EmailDto emailDto = emailDtoMaker(emailBean);
+        emailService.sendEmail(emailDto);
+        return new ResponseBean<>(HttpStatus.OK, "Mail sender under process", "Mail sender under process", null);
+
     }
 
     public EmailDto emailDtoMaker(EmailBean emailBean) {
@@ -68,6 +77,9 @@ public class EmailService {
                 .build();
         return emailDto;
     }
+
+
+
 
 
 
