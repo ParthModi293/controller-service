@@ -1,8 +1,8 @@
 package com.example.testservice.controller;
 
+import com.example.testservice.model.EmailBean;
 import com.example.testservice.service.EmailService;
 import org.common.common.ResponseBean;
-import org.communication.bean.EmailBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
