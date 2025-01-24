@@ -1,9 +1,9 @@
 package com.example.testservice.service;
 
 
+import com.example.testservice.model.EmailBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.common.common.ResponseBean;
-import org.communication.bean.EmailBean;
 import org.communication.dto.EmailDto;
 import org.communication.repository.TemplateDetailsRepository;
 import org.springframework.http.HttpStatus;
