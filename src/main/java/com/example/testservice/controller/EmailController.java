@@ -1,8 +1,8 @@
 package com.example.testservice.controller;
 
+import com.example.testservice.service.EmailService;
 import org.common.common.ResponseBean;
 import org.communication.bean.EmailBean;
-import org.communication.service.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class EmailController {
 
 
     @PostMapping("/send-email")
-    public ResponseEntity<ResponseBean<?>> filterAlert(@RequestBody EmailBean emailBean) throws Exception {
+    public ResponseEntity<ResponseBean<?>> mailSender(@RequestBody EmailBean emailBean) throws Exception {
         ResponseBean<?> responseBean = emailService.mailSender(emailBean);
         return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
