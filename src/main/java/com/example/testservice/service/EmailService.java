@@ -45,7 +45,7 @@ public class EmailService {
                 String path = "restEmail/send";
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
-                HttpEntity<EmailBean> requestEntity = new HttpEntity<>(emailBean, headers);
+                HttpEntity<EmailDto> requestEntity = new HttpEntity<>(emailDto, headers);
                 ResponseEntity<ResponseBean> responseBean = restTemplate.exchange(authUrl + path, HttpMethod.POST,
                         requestEntity, ResponseBean.class);
                 return new ResponseBean<>(responseBean.getBody().getRStatus(), responseBean.getBody().getRMsg(), responseBean.getBody().getDisplayMessage(), null);
