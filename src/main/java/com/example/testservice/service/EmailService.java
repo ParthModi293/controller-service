@@ -7,26 +7,31 @@ import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.common.common.ResponseBean;
 import org.communication.dto.EmailDto;
-import org.communication.repository.TemplateDetailsRepository;
+import org.communication.repository.TemplateDetailRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Log4j2
 @Service
 public class EmailService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final TemplateDetailsRepository templateDetailsRepository;
+    private final TemplateDetailRepository templateDetailsRepository;
     private final RestTemplate restTemplate;
 
 
-    public EmailService(KafkaTemplate<String, Object> kafkaTemplate, TemplateDetailsRepository templateDetailsRepository, RestTemplate restTemplate) {
+    public EmailService(KafkaTemplate<String, Object> kafkaTemplate, TemplateDetailRepository templateDetailsRepository, RestTemplate restTemplate) {
 
         this.kafkaTemplate = kafkaTemplate;
         this.templateDetailsRepository = templateDetailsRepository;
@@ -42,11 +47,13 @@ public class EmailService {
         EmailDto emailDto = emailDtoMaker(emailBean);
         if (emailDto.getPriority() == 1) {
             try {
+                RestTemplate rest = new RestTemplate();
                 String path = "restEmail/send";
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
+
                 HttpEntity<EmailDto> requestEntity = new HttpEntity<>(emailDto, headers);
-                ResponseEntity<ResponseBean> responseBean = restTemplate.exchange(authUrl + path, HttpMethod.POST,
+                ResponseEntity<ResponseBean> responseBean = rest.exchange(authUrl + path, HttpMethod.POST,
                         requestEntity, ResponseBean.class);
                 return new ResponseBean<>(responseBean.getBody().getRStatus(), responseBean.getBody().getRMsg(), responseBean.getBody().getDisplayMessage(), null);
 
@@ -57,16 +64,19 @@ public class EmailService {
 
         } else {
             kafkaTemplate.send("email-topic", emailDto.getPriority(), null, new ObjectMapper().writeValueAsString(emailDto));
-            return null;
+            return new ResponseBean<>(HttpStatus.OK, "Email sent successfully", null);
         }
 
     }
 
 
-    public EmailDto emailDtoMaker(EmailBean emailBean) {
-        Map<String, Object> mailDetails = templateDetailsRepository.getMailDetails(emailBean.getTemplateName(), emailBean.getDbName());
+    public EmailDto emailDtoMaker(EmailBean emailBean) throws Exception {
+        Map<String, Object> mailDetails = templateDetailsRepository.getMailDetails(String.valueOf(emailBean.getTemplateId()), emailBean.getDbName());
         if (mailDetails == null || mailDetails.isEmpty()) {
-            mailDetails = templateDetailsRepository.getMailDetails(emailBean.getTemplateName(), "email");
+            mailDetails = templateDetailsRepository.getMailDetails(String.valueOf(emailBean.getTemplateId()), "public");
+        }
+        if (emailBean.getBcc().size() + emailBean.getTo().size() + emailBean.getCc().size() > Integer.parseInt(mailDetails.get("maxLimit").toString())){
+            throw new Exception("Mail limit exceeded");
         }
 
 
@@ -85,20 +95,33 @@ public class EmailService {
             subject = subject.replace(placeholder, entry.getValue().toString());
         }
 
-        return EmailDto.builder()
-                .from(mailDetails.get("fromEmailId").toString())
-                .to(emailBean.getTo())
-                .cc(emailBean.getCc())
-                .bcc(emailBean.getBcc())
-                .subject(subject)
-                .body(body)
-                .version(mailDetails.get("version").toString())
-                .attachments(emailBean.getFile())
-                .host(mailDetails.get("host").toString())
-                .password(mailDetails.get("password").toString())
-                .port(Integer.parseInt(mailDetails.get("port").toString()))
-                .priority(Integer.parseInt(mailDetails.get("priority").toString()))
-                .build();
+        Pattern pattern = Pattern.compile("##.*?##");
+        Matcher bodyMatcher = pattern.matcher(body);
+        Matcher subjectMatcher = pattern.matcher(subject);
+        if (bodyMatcher.find()) {
+            throw new Exception("Invalid body found");
+        }
+        if (subjectMatcher.find()) {
+            throw new Exception("Invalid subject found");
+        }
+
+
+
+        EmailDto emailDto = new EmailDto();
+        emailDto.setFrom(mailDetails.get("fromEmailId").toString());
+        emailDto.setTo(emailBean.getTo());
+        emailDto.setSubject(subject);
+        emailDto.setBody(body);
+        emailDto.setCc(emailBean.getCc());
+        emailDto.setBcc(emailBean.getBcc());
+        emailDto.setVersion(mailDetails.get("version").toString());
+        emailDto.setAttachments(emailBean.getFile());
+        emailDto.setHost(mailDetails.get("host").toString());
+        emailDto.setPassword(mailDetails.get("password").toString());
+        emailDto.setPort(Integer.parseInt(mailDetails.get("port").toString()));
+        emailDto.setPriority(Integer.parseInt(mailDetails.get("priority").toString()));
+
+        return emailDto;
     }
 
 

@@ -9,13 +9,13 @@ import java.util.Map;
 @Data
 public class EmailBean {
 
-    private String templateName;
+    private int templateId;
     private String dbName;
     private List<String> to;
     private List<String> cc;
     private List<String> bcc;
     private Map<String, Object> subjectPlaceHolder;
     private Map<String, Object> bodyPlaceHolder;
-    private List<MultipartFile> file;
+    private List<String> file;
 
 }
