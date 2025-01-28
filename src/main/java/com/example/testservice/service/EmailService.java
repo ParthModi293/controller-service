@@ -71,9 +71,10 @@ public class EmailService {
 
 
     public EmailDto emailDtoMaker(EmailBean emailBean) throws Exception {
-        Map<String, Object> mailDetails = templateDetailsRepository.getMailDetails(String.valueOf(emailBean.getTemplateId()), emailBean.getDbName());
+        Map<String, Object> mailDetails = templateDetailsRepository.getMailDetails(emailBean.getTemplateId(), emailBean.getDbName());
+        System.out.println("mailDetails Object------->>>: " + mailDetails);
         if (mailDetails == null || mailDetails.isEmpty()) {
-            mailDetails = templateDetailsRepository.getMailDetails(String.valueOf(emailBean.getTemplateId()), "public");
+            mailDetails = templateDetailsRepository.getMailDetails(emailBean.getTemplateId(), "public");
         }
         if (emailBean.getBcc().size() + emailBean.getTo().size() + emailBean.getCc().size() > Integer.parseInt(mailDetails.get("maxLimit").toString())){
             throw new Exception("Mail limit exceeded");
