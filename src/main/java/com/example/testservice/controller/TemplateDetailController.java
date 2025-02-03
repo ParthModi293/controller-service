@@ -29,4 +29,10 @@ public class TemplateDetailController {
         return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
 
+    @GetMapping("getAll/{templateMastId}")
+    public ResponseEntity<?> getAllTemplateDetail(@PathVariable("templateMastId") int templateMastId) {
+        ResponseBean<?> responseBean = templateDetailsService.getAllTemplateDetail(templateMastId);
+        return new ResponseEntity<>(responseBean, responseBean.getRStatus());
+    }
+
 }
