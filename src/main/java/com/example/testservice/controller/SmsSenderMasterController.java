@@ -22,7 +22,6 @@ public class SmsSenderMasterController {
 
     @PostMapping("/create")
     public ResponseEntity<ResponseBean<?>> createSenderMaster(@RequestBody @Valid SmsSenderMasterDto requestDTO) {
-
         ResponseBean<?> responseBean  = smsSenderMasterService.createSenderMaster(requestDTO);
         return new ResponseEntity<>(responseBean,responseBean.getRStatus());
     }

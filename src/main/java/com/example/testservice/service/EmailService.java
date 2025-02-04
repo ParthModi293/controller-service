@@ -5,6 +5,7 @@ import com.example.testservice.model.EmailBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import org.common.common.Const;
 import org.common.common.ResponseBean;
 import org.communication.dto.EmailDto;
 import org.communication.repository.TemplateDetailRepository;
@@ -45,7 +46,9 @@ public class EmailService {
 
     public ResponseBean<Void> mailSender(EmailBean emailBean) throws Exception {
         EmailDto emailDto = emailDtoMaker(emailBean);
+
         if (emailDto.getPriority() == 1) {
+            ResponseEntity<ResponseBean> responseBean = null;
             try {
                 RestTemplate rest = new RestTemplate();
                 String path = "restEmail/send";
@@ -53,13 +56,14 @@ public class EmailService {
                 headers.setContentType(MediaType.APPLICATION_JSON);
 
                 HttpEntity<EmailDto> requestEntity = new HttpEntity<>(emailDto, headers);
-                ResponseEntity<ResponseBean> responseBean = rest.exchange(authUrl + path, HttpMethod.POST,
+                responseBean  = rest.exchange(authUrl + path, HttpMethod.POST,
                         requestEntity, ResponseBean.class);
-                return new ResponseBean<>(responseBean.getBody().getRStatus(), responseBean.getBody().getRMsg(), responseBean.getBody().getDisplayMessage(), null);
+                return new ResponseBean<>(responseBean.getBody().getRStatus(), Const.rCode.SUCCESS  , responseBean.getBody().getRMsg(), responseBean.getBody().getDisplayMessage(), null);
 
-            } catch (HttpClientErrorException e) {
+            } catch (Exception e) {
                 log.error(e);
-                return null;
+                return new ResponseBean<>(responseBean.getBody().getRStatus(), Const.rCode.BAD_REQUEST  , responseBean.getBody().getRMsg(), responseBean.getBody().getDisplayMessage(), null);
+
             }
 
         } else {
@@ -72,7 +76,6 @@ public class EmailService {
 
     public EmailDto emailDtoMaker(EmailBean emailBean) throws Exception {
         Map<String, Object> mailDetails = templateDetailsRepository.getMailDetails(emailBean.getTemplateId(), emailBean.getDbName());
-        System.out.println("mailDetails Object------->>>: " + mailDetails);
         if (mailDetails == null || mailDetails.isEmpty()) {
             mailDetails = templateDetailsRepository.getMailDetails(emailBean.getTemplateId(), "public");
         }

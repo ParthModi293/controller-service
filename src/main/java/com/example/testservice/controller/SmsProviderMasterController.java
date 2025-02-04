@@ -21,8 +21,7 @@ public class SmsProviderMasterController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseBean<?>> createSmsProvider(
-            @RequestBody @Valid SmsProviderMasterDto requestDTO) {
+    public ResponseEntity<ResponseBean<?>> createSmsProvider(@RequestBody @Valid SmsProviderMasterDto requestDTO) {
         ResponseBean<?> responseBean = smsProviderMasterService.createSmsProvider(requestDTO);
         return new ResponseEntity<>(responseBean,responseBean.getRStatus());
     }

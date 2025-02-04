@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-@ComponentScan({"org.communication", "com.example.testservice"})
+@ComponentScan({"org.communication", "com.example.testservice","org.common"})
 @EnableJpaRepositories({"org.communication", "com.example.testservice"})
 public class TestServiceApplication {
 
@@ -35,7 +35,7 @@ public class TestServiceApplication {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
-        em.setPackagesToScan("org.communication", "com.example.testservice");
+        em.setPackagesToScan("org.communication", "com.example.testservice","org.common");
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setShowSql(false);
         hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQLDialect");
