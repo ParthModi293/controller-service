@@ -1,15 +1,22 @@
 package com.example.testservice.controller;
 
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.common.common.ResponseBean;
 import org.communication.dto.SmsTemplateMasterDto;
 import org.communication.dto.SmsTemplateMasterFilterRequest;
+import org.communication.entity.SmsTemplateMaster;
 import org.communication.service.SmsTemplateMasterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/sms-template")
+@CrossOrigin
+@Log4j2
 public class SmsTemplateMasterController {
 
     private final SmsTemplateMasterService smsTemplateMasterService;
@@ -19,27 +26,29 @@ public class SmsTemplateMasterController {
     }
 
     @PostMapping("/create-update")
-    public ResponseEntity<?> saveSmsTemplate(@RequestBody @Valid SmsTemplateMasterDto requestDTO) {
-        ResponseBean<?> responseBean  =smsTemplateMasterService.addOrUpdateSmsTemplate(requestDTO);
+    public ResponseEntity<ResponseBean<Map<String, Object>>> saveSmsTemplate(@RequestBody @Valid SmsTemplateMasterDto requestDTO) {
+        log.info("Save Sms template: {}  ", requestDTO);
+        ResponseBean<Map<String, Object>> responseBean  =smsTemplateMasterService.addOrUpdateSmsTemplate(requestDTO);
 
          return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
 
 
    @GetMapping(value = "/getAll")
-    public ResponseEntity<?> getAllSmsTemplates(
+    public ResponseEntity< ResponseBean<List<SmsTemplateMaster>>> getAllSmsTemplates(
             @RequestParam(required = false) String searchText,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+       log.info("get all Sms Template: ");
         SmsTemplateMasterFilterRequest filterRequest = new SmsTemplateMasterFilterRequest(searchText, page, size);
-        ResponseBean<?> responseBean = smsTemplateMasterService.getAllSmsTemplates(filterRequest);
-        return new ResponseEntity<>(responseBean, responseBean.getRStatus());
+       ResponseBean<List<SmsTemplateMaster>> responseBean = smsTemplateMasterService.getAllSmsTemplates(filterRequest);
+       return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getSmsTemplateById(@PathVariable Integer id) {
-        ResponseBean<?> response = smsTemplateMasterService.findSmsTemplateById(id);
+    public ResponseEntity< ResponseBean<SmsTemplateMaster>> getSmsTemplateById(@PathVariable Integer id) {
+        log.info("fetch sms Template by id: {}  ", id);
+        ResponseBean<SmsTemplateMaster> response = smsTemplateMasterService.findSmsTemplateById(id);
         return new ResponseEntity<>(response, response.getRStatus());
     }
 
