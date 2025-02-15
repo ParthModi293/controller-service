@@ -57,14 +57,5 @@ public class SmsService {
         return smsSendService.sendSms(smsDetails, smsDto);
     }
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        String html = "<div>Hello World</div>";
-        Document doc = Jsoup.parse(URLDecoder.decode(html, StandardCharsets.UTF_8.toString()));
-        System.out.println("before:" + doc);
-        if ((!doc.select("script").isEmpty())) {
-            System.out.println("Data of Terms and Conditions text contains malicious elements.");
-        }
-    }
-
 
 }
