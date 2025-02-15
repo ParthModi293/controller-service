@@ -19,7 +19,6 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-
     @PostMapping("/send-email")
     public ResponseEntity<ResponseBean<Void>> mailSender(@RequestBody EmailBean emailBean) throws Exception {
         log.info("Email Sender : {}  ", emailBean);
