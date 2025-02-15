@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/sms-sender")
 public class SmsSenderMasterController {
@@ -21,7 +22,7 @@ public class SmsSenderMasterController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseBean<?>> createSenderMaster(@RequestBody @Valid SmsSenderMasterDto requestDTO) {
+    public ResponseEntity<?> createSenderMaster(@RequestBody @Valid SmsSenderMasterDto requestDTO) {
         ResponseBean<?> responseBean  = smsSenderMasterService.createSenderMaster(requestDTO);
         return new ResponseEntity<>(responseBean,responseBean.getRStatus());
     }

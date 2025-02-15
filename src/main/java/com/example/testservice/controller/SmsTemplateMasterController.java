@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.common.common.ResponseBean;
 import org.communication.dto.SmsTemplateMasterDto;
 import org.communication.dto.SmsTemplateMasterFilterRequest;
-import org.communication.dto.TemplateMastFilterRequest;
 import org.communication.service.SmsTemplateMasterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +19,28 @@ public class SmsTemplateMasterController {
     }
 
     @PostMapping("/create-update")
-    public ResponseEntity<ResponseBean<?>> saveSmsTemplate(@RequestBody @Valid SmsTemplateMasterDto requestDTO) {
+    public ResponseEntity<?> saveSmsTemplate(@RequestBody @Valid SmsTemplateMasterDto requestDTO) {
         ResponseBean<?> responseBean  =smsTemplateMasterService.addOrUpdateSmsTemplate(requestDTO);
-        return new ResponseEntity<>(responseBean,responseBean.getRStatus());
+
+         return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllSmsTemplates(@RequestBody @Valid SmsTemplateMasterFilterRequest templateMastFilterRequest) {
-        ResponseBean<?> responseBean = smsTemplateMasterService.getAllSmsTemplates(templateMastFilterRequest);
+
+   @GetMapping(value = "/getAll")
+    public ResponseEntity<?> getAllSmsTemplates(
+            @RequestParam(required = false) String searchText,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        SmsTemplateMasterFilterRequest filterRequest = new SmsTemplateMasterFilterRequest(searchText, page, size);
+        ResponseBean<?> responseBean = smsTemplateMasterService.getAllSmsTemplates(filterRequest);
         return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getSmsTemplateById(@PathVariable Integer id) {
+        ResponseBean<?> response = smsTemplateMasterService.findSmsTemplateById(id);
+        return new ResponseEntity<>(response, response.getRStatus());
+    }
+
 }
