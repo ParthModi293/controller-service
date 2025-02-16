@@ -34,7 +34,7 @@ public class SmsTemplateMasterController {
     }
 
 
-   @GetMapping(value = "/getAll")
+   /*@GetMapping(value = "/getAll")
     public ResponseEntity< ResponseBean<List<SmsTemplateMaster>>> getAllSmsTemplates(
             @RequestParam(required = false) String searchText,
             @RequestParam(defaultValue = "1") int page,
@@ -43,7 +43,7 @@ public class SmsTemplateMasterController {
         SmsTemplateMasterFilterRequest filterRequest = new SmsTemplateMasterFilterRequest(searchText, page, size);
        ResponseBean<List<SmsTemplateMaster>> responseBean = smsTemplateMasterService.getAllSmsTemplates(filterRequest);
        return new ResponseEntity<>(responseBean, responseBean.getRStatus());
-    }
+    }*/
 
     @PostMapping(value = "/getAll")
     public ResponseEntity<ResponseBean<List<SmsTemplateMaster>>> getAllSmsTemplates(
