@@ -45,6 +45,17 @@ public class SmsTemplateMasterController {
        return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
 
+    @PostMapping(value = "/getAll")
+    public ResponseEntity<ResponseBean<List<SmsTemplateMaster>>> getAllSmsTemplates(
+            @RequestBody @Valid SmsTemplateMasterFilterRequest filterRequest) {
+        log.info("Fetching all SMS Templates with filter: {}", filterRequest);
+
+        ResponseBean<List<SmsTemplateMaster>> responseBean = smsTemplateMasterService.getAllSmsTemplates(filterRequest);
+
+        return new ResponseEntity<>(responseBean, responseBean.getRStatus());
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity< ResponseBean<SmsTemplateMaster>> getSmsTemplateById(@PathVariable Integer id) {
         log.info("fetch sms Template by id: {}  ", id);
