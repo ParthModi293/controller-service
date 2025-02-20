@@ -1,7 +1,7 @@
 package com.clapcle.controller.controller;
 
-import com.clapcle.controller.model.SMSBean;
-import com.clapcle.controller.service.SmsService;
+import com.clapcle.communication.model.SMSBean;
+import com.clapcle.communication.service.SmsService;
 import com.clapcle.core.common.ResponseBean;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;

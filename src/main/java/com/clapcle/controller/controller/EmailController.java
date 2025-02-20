@@ -1,7 +1,7 @@
 package com.clapcle.controller.controller;
 
-import com.clapcle.controller.model.EmailBean;
-import com.clapcle.controller.service.EmailService;
+import com.clapcle.communication.model.EmailBean;
+import com.clapcle.communication.service.EmailService;
 import com.clapcle.core.common.ResponseBean;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
