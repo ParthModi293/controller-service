@@ -1,9 +1,9 @@
-package com.example.testservice.controller;
+package com.clapcle.controller.controller;
 
-import com.example.testservice.model.EmailBean;
-import com.example.testservice.service.EmailService;
+import com.clapcle.controller.model.EmailBean;
+import com.clapcle.controller.service.EmailService;
+import com.clapcle.core.common.ResponseBean;
 import lombok.extern.log4j.Log4j2;
-import org.common.common.ResponseBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,6 @@ public class EmailController {
         ResponseBean<Void> responseBean = emailService.mailSender(emailBean);
         return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
-
 
 
 }

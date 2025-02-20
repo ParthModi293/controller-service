@@ -1,12 +1,12 @@
-package com.example.testservice.service;
+package com.clapcle.controller.service;
 
 
-import com.example.testservice.model.EmailBean;
+import com.clapcle.communication.dto.EmailDto;
+import com.clapcle.communication.repository.MailTemplateDetailRepository;
+import com.clapcle.controller.model.EmailBean;
+import com.clapcle.core.common.LogUtil;
+import com.clapcle.core.common.ResponseBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.common.common.LogUtil;
-import org.common.common.ResponseBean;
-import org.communication.dto.EmailDto;
-import org.communication.repository.TemplateDetailRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,12 +21,12 @@ import java.util.regex.Pattern;
 @Service
 public class EmailService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final TemplateDetailRepository templateDetailsRepository;
+    private final MailTemplateDetailRepository templateDetailsRepository;
 
     @Value("${spring.auth.url}")
     private String authUrl;
 
-    public EmailService(KafkaTemplate<String, Object> kafkaTemplate, TemplateDetailRepository templateDetailsRepository) {
+    public EmailService(KafkaTemplate<String, Object> kafkaTemplate, MailTemplateDetailRepository templateDetailsRepository) {
         this.kafkaTemplate = kafkaTemplate;
         this.templateDetailsRepository = templateDetailsRepository;
     }
@@ -51,7 +51,7 @@ public class EmailService {
                 HttpEntity<EmailDto> requestEntity = new HttpEntity<>(emailDto, headers);
                 ResponseEntity<ResponseBean> responseBean = rest.exchange(authUrl + path, HttpMethod.POST,
                         requestEntity, ResponseBean.class);
-                return new ResponseBean<>(responseBean.getBody().getRStatus(), responseBean.getBody().getRMsg(), responseBean.getBody().getDisplayMessage(), null);
+                return new ResponseBean<>(responseBean.getBody().getRStatus(), responseBean.getBody().getRCode(), responseBean.getBody().getRMsg(), responseBean.getBody().getDisplayMessage(), null);
             } catch (HttpClientErrorException e) {
                 LogUtil.printErrorStackTraceLog(e);
                 return null;

@@ -1,4 +1,4 @@
-package com.example.testservice.model;
+package com.clapcle.controller.model;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

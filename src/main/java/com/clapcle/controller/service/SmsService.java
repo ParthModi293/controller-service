@@ -1,20 +1,14 @@
-package com.example.testservice.service;
+package com.clapcle.controller.service;
 
-import com.example.testservice.model.Recipients;
-import com.example.testservice.model.SMSBean;
-import org.common.common.ResponseBean;
-import org.communication.dto.SmsDetailsDto;
-import org.communication.dto.SmsDto;
-import org.communication.repository.SmsMasterRepository;
-import org.communication.service.SmsSendService;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.springframework.http.HttpStatus;
+import com.clapcle.communication.dto.SmsDetailsDto;
+import com.clapcle.communication.dto.SmsDto;
+import com.clapcle.communication.repository.SmsMasterRepository;
+import com.clapcle.communication.service.SmsSendService;
+import com.clapcle.controller.model.Recipients;
+import com.clapcle.controller.model.SMSBean;
+import com.clapcle.core.common.ResponseBean;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

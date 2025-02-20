@@ -1,10 +1,10 @@
-package com.example.testservice.controller;
+package com.clapcle.controller.controller;
 
+import com.clapcle.communication.dto.SmsMasterDto;
+import com.clapcle.communication.service.SmsMasterService;
+import com.clapcle.core.common.ResponseBean;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
-import org.common.common.ResponseBean;
-import org.communication.dto.SmsMasterDto;
-import org.communication.service.SmsMasterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +24,11 @@ public class SmsMasterController {
     }
 
     @PostMapping("/create-update")
-    public ResponseEntity<ResponseBean<Map<String,Object>>> saveOrUpdateSmsMaster(@Valid @RequestBody SmsMasterDto dto) {
+    public ResponseEntity<ResponseBean<Map<String, Object>>> saveOrUpdateSmsMaster(@Valid @RequestBody SmsMasterDto dto) {
         log.info("Save/Update Sms Master: {}  ", dto);
         ResponseBean<Map<String, Object>> responseBean = smsMasterService.createOrUpdateSmsMaster(dto);
 
-        return new ResponseEntity<>(responseBean,responseBean.getRStatus());
+        return new ResponseEntity<>(responseBean, responseBean.getRStatus());
     }
 
 }

@@ -1,9 +1,9 @@
-package com.example.testservice.controller;
+package com.clapcle.controller.controller;
 
-import com.example.testservice.model.SMSBean;
-import com.example.testservice.service.SmsService;
+import com.clapcle.controller.model.SMSBean;
+import com.clapcle.controller.service.SmsService;
+import com.clapcle.core.common.ResponseBean;
 import lombok.extern.log4j.Log4j2;
-import org.common.common.ResponseBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
